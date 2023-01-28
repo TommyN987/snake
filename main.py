@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
 from enum import Enum
+import time
 
 class Direction(Enum):
     UP = 1
@@ -14,6 +15,7 @@ class Snake:
         self.block = pygame.image.load('assets/block.jpg').convert()
         self.x = 100
         self.y = 100
+        self.direction = Direction.DOWN
 
     def draw(self):
         self.parent_screen.fill((110, 110, 50))
@@ -22,14 +24,18 @@ class Snake:
         pygame.display.flip()
 
     def move(self, direction: Direction):
-        if direction == Direction.UP:
+        self.direction = direction
+
+    def walk(self, direction: Direction):
+        if self.direction == Direction.UP:
             self.y -= 10
-        elif direction == Direction.DOWN:
+        if self.direction == Direction.DOWN:
             self.y += 10
-        elif direction == Direction.RIGHT:
+        if self.direction == Direction.RIGHT:
             self.x += 10
-        elif direction == Direction.LEFT:
+        if self.direction == Direction.LEFT:
             self.x -= 10
+        
         self.draw()
 
 class Game:
@@ -55,6 +61,10 @@ class Game:
                         self.snake.move(Direction.LEFT)
                 elif event.type == QUIT:
                     running = False
+            
+            self.snake.walk(self.snake.direction)
+
+            time.sleep(.2)
 
 if __name__ == '__main__':
     game = Game()
