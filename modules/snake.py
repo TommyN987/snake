@@ -1,16 +1,16 @@
 import pygame
 
-from constants import SIZE, Direction
+from constants import SIZE, BACKGROUND_COLOR, Direction
 
 class Snake:
-    def __init__(self, parent_screen, length):
+    def __init__(self, parent_screen):
         self.parent_screen = parent_screen
         self.image = pygame.image.load('assets/block.jpg').convert()
         self.direction = Direction.DOWN
 
-        self.length = length
-        self.x = [40]*length
-        self.y = [40]*length
+        self.length = 1
+        self.x = [40]*self.length
+        self.y = [40]*self.length
 
     def move(self, direction: Direction):
         self.direction = direction
@@ -39,7 +39,7 @@ class Snake:
         self.y.append(-1)
 
     def draw(self):
-        self.parent_screen.fill((110, 110, 50))
+        self.parent_screen.fill(BACKGROUND_COLOR)
 
         for i in range(self.length):
             self.parent_screen.blit(self.image, (self.x[i], self.y[i]))
