@@ -1,6 +1,8 @@
 import pygame
 import random
 
+from constants import SIZE
+
 class Apple:
     def __init__(self, parent_screen):
         self.parent_screen = parent_screen
@@ -13,5 +15,5 @@ class Apple:
         pygame.display.flip()
     
     def move(self):
-        self.x = random.randint(1, 25) * SIZE
-        self.y = random.randint(1, 20) * SIZE
+        self.x = random.randint(1, 24) * SIZE
+        self.y = random.randint(1, 19) * SIZE
