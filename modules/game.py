@@ -11,6 +11,7 @@ class Game:
     def __init__(self):
         pygame.init()
         pygame.display.set_caption("Snake")
+        pygame.mixer.init()
         self.surface = pygame.display.set_mode((1000, 800))
         self.snake = Snake(self.surface)
         self.snake.draw()
@@ -42,6 +43,13 @@ class Game:
 
         pygame.display.flip()
 
+    def play_sound(self, sound_name):
+        if sound_name == "crash":
+            sound = pygame.mixer.Sound("assets/crash_sound.mp3")
+        elif sound_name == "ding":
+            sound = pygame.mixer.Sound("assets/ding_sound.mp3")
+
+        pygame.mixer.Sound.play(sound)
     
     def play(self):
         self.snake.walk(Direction.DOWN)
@@ -51,12 +59,14 @@ class Game:
 
         # Snake eats apple
         if self.is_collision(self.snake.x[0], self.snake.y[0], self.apple.x, self.apple.y):
+            self.play_sound("ding")
             self.snake.increase_length()
             self.apple.move()
         
         # Snake collides with itself
         for i in range(2, self.snake.length):
             if self.is_collision(self.snake.x[0], self.snake.y[0], self.snake.x[i], self.snake.y[i]):
+                self.play_sound("crash")
                 raise "Collision occured"
 
     def run(self):
