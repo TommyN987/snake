@@ -17,6 +17,7 @@ class Game:
         self.snake.draw()
         self.apple = Apple(self.surface)
         self.apple.draw()
+        self.pause = False
 
     def reset(self):
         self.snake = Snake(self.surface)
@@ -32,6 +33,12 @@ class Game:
         font = FONT
         score = font.render(f"Score: {self.snake.length}", True, (200, 200, 200))
         self.surface.blit(score, (850, 10))
+
+    def display_pause(self):
+        font = FONT
+        pause = font.render("Pause", True, (200, 200, 200))
+        self.surface.blit(pause, (40, 10))
+        pygame.display.flip()
 
     def show_game_over(self):
         self.surface.fill(BACKGROUND_COLOR)
@@ -68,24 +75,27 @@ class Game:
             if self.is_collision(self.snake.x[0], self.snake.y[0], self.snake.x[i], self.snake.y[i]):
                 self.play_sound("crash")
                 raise "Collision occured"
-        
+
+        # Snake collides border
         if not (0 <= self.snake.x[0] <= 1000 and 0 <= self.snake.y[0] <= 800):
             self.play_sound("crash")
             raise "Hit the boundary error"
 
     def run(self):
         running = True
-        pause = False
 
         while running:
+            if self.pause:
+                self.display_pause()
+
             for event in pygame.event.get():
                 if event.type == KEYDOWN:
                     if event.key == K_ESCAPE:
                         running = False
                     if event.key == K_RETURN:
-                        pause = False
+                        self.pause = False
                     
-                    if not pause:
+                    if not self.pause:
                         if event.key == K_UP:
                             self.snake.move(Direction.UP)
                         if event.key == K_DOWN:
@@ -95,16 +105,16 @@ class Game:
                         if event.key == K_LEFT:
                             self.snake.move(Direction.LEFT)
                         if event.key == K_p:
-                            pause = True
+                            self.pause = True
                 elif event.type == QUIT:
                     running = False
             
             try:
-                if not pause:
+                if not self.pause:
                     self.play()
             except Exception as e:
                 self.show_game_over()
-                pause = True
+                self.pause = True
                 self.reset()
 
             time.sleep(.25)
